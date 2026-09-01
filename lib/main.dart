@@ -28,7 +28,7 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// Komponen Halaman Utama (Stateless)
+
 class KopsisPage extends StatelessWidget {
   const KopsisPage({super.key});
 
