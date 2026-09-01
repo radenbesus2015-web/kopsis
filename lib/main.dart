@@ -28,44 +28,114 @@ class MyApp extends StatelessWidget {
   }
 }
 
-
-class KopsisPage extends StatelessWidget {
+class KopsisPage extends StatefulWidget {
   const KopsisPage({super.key});
 
   @override
+  State<KopsisPage> createState() => _KopsisPageState();
+}
+
+class _KopsisPageState extends State<KopsisPage> {
+  late TextEditingController _controller;
+  String kataCari = '';
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final barangTersedia = daftarBarang.where((b) => b['stok'] > 0).toList();
+    final hasilCari = daftarBarang
+        .where((b) => b['stok'] > 0 && b['nama'].toLowerCase().contains(kataCari))
+        .toList();
 
     return Scaffold(
+      backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
-        title: const Text('Koperasi Sekolah'),
-        centerTitle: true,
-        elevation: 2,
+        title: const Text(
+          'Koperasi Sekolah',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        elevation: 0,
       ),
-      body: ListView.builder(
-        itemCount: barangTersedia.length,
-        itemBuilder: (context, index) {
-          final barang = barangTersedia[index];
-
-          if (barang['stok'] < 20) {
-            return BarangCard(
-              nama: barang['nama'],
-              kategori: barang['kategori'] ?? 'Lainnya',
-              hargaAnggota: barang['anggota'],
-              stok: barang['stok'],
-              ikon: barang['ikon'],
-              sorot: true,
-            );
-          } else {
-            return BarangCard(
-              nama: barang['nama'],
-              kategori: barang['kategori'] ?? 'Lainnya',
-              hargaAnggota: barang['anggota'],
-              stok: barang['stok'],
-              ikon: barang['ikon'],
-            );
-          }
-        },
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
+            child: TextField(
+              controller: _controller,
+              decoration: InputDecoration(
+                hintText: 'Cari barang...',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: kataCari.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          setState(() {
+                            _controller.clear();
+                            kataCari = '';
+                          });
+                        },
+                      )
+                    : null,
+                filled: true,
+                fillColor: Colors.white,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.grey.shade300),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                  borderSide: BorderSide(color: Colors.grey.shade300),
+                ),
+              ),
+              onChanged: (nilai) {
+                setState(() {
+                  kataCari = nilai.toLowerCase();
+                });
+              },
+            ),
+          ),
+          Expanded(
+            child: hasilCari.isEmpty
+                ? const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.search_off, size: 64, color: Colors.grey),
+                        SizedBox(height: 8),
+                        Text(
+                          'Barang tidak ditemukan',
+                          style: TextStyle(color: Colors.grey, fontSize: 16),
+                        ),
+                      ],
+                    ),
+                  )
+                : ListView.builder(
+                    itemCount: hasilCari.length,
+                    itemBuilder: (context, index) {
+                      final barang = hasilCari[index];
+                      return BarangCard(
+                        nama: barang['nama'],
+                        kategori: barang['kategori'] ?? 'Lainnya',
+                        hargaAnggota: barang['anggota'],
+                        hargaUmum: barang['umum'],
+                        stok: barang['stok'],
+                        ikon: barang['ikon'],
+                        sorot: barang['stok'] < 20,
+                      );
+                    },
+                  ),
+          ),
+        ],
       ),
     );
   }
