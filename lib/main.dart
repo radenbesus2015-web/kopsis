@@ -151,7 +151,9 @@ class _KopsisPageState extends State<KopsisPage> {
                         padding: const EdgeInsets.all(8),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: kolom,
-                          childAspectRatio: constraints.maxWidth < 500 ? 3.0 : 2.5,
+                         childAspectRatio: constraints.maxWidth < 500 
+                         ? 2.5 
+                         : (constraints.maxWidth < 800 ? 1.9 : 2.2),
                           crossAxisSpacing: 8,
                           mainAxisSpacing: 8,
                         ),
