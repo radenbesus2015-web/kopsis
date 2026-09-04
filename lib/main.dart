@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'barang_card.dart';
 
 final List<Map<String, dynamic>> daftarBarang = [
-  {'nama': 'Buku Tulis', 'anggota': 3000, 'umum': 3500, 'stok': 40, 'kategori': 'atk', 'ikon': Icons.menu_book},
+  {'nama': 'Buku Tulis Bergaris 58 Lembar Sampul Tebal', 'anggota': 3000, 'umum': 3500, 'stok': 40, 'kategori': 'atk', 'ikon': Icons.menu_book},
   {'nama': 'Pulpen', 'anggota': 2500, 'umum': 3000, 'stok': 25, 'kategori': 'atk', 'ikon': Icons.edit},
   {'nama': 'Roti', 'anggota': 5000, 'umum': 5500, 'stok': 15, 'kategori': 'makanan', 'ikon': Icons.bakery_dining},
   {'nama': 'Air Mineral', 'anggota': 3000, 'umum': 3500, 'stok': 0, 'kategori': 'minuman', 'ikon': Icons.local_drink},

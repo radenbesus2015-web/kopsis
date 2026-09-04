@@ -41,6 +41,8 @@ class BarangCard extends StatelessWidget {
           ),
           title: Text(
             nama,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
             style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
           ),
           subtitle: Column(
