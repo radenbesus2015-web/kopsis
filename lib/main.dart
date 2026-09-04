@@ -57,6 +57,8 @@ class _KopsisPageState extends State<KopsisPage> {
         .where((b) => b['stok'] > 0 && b['nama'].toLowerCase().contains(kataCari))
         .toList();
 
+    final lebarLayar = MediaQuery.of(context).size.width;
+
     return Scaffold(
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
@@ -104,6 +106,20 @@ class _KopsisPageState extends State<KopsisPage> {
               },
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+            child: Container(
+              padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade100,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Text(
+                'Lebar layar: ${lebarLayar.toStringAsFixed(0)} px',
+                style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.blueAccent),
+              ),
+            ),
+          ),
           Expanded(
             child: hasilCari.isEmpty
                 ? const Center(
@@ -119,18 +135,39 @@ class _KopsisPageState extends State<KopsisPage> {
                       ],
                     ),
                   )
-                : ListView.builder(
-                    itemCount: hasilCari.length,
-                    itemBuilder: (context, index) {
-                      final barang = hasilCari[index];
-                      return BarangCard(
-                        nama: barang['nama'],
-                        kategori: barang['kategori'] ?? 'Lainnya',
-                        hargaAnggota: barang['anggota'],
-                        hargaUmum: barang['umum'],
-                        stok: barang['stok'],
-                        ikon: barang['ikon'],
-                        sorot: barang['stok'] < 20,
+                : LayoutBuilder(
+                    builder: (context, constraints) {
+                      int kolom;
+                      
+                      if (constraints.maxWidth < 500) {
+                        kolom = 1;
+                      } else if (constraints.maxWidth < 800) {
+                        kolom = 2;
+                      } else {
+                        kolom = 3;
+                      }
+
+                      return GridView.builder(
+                        padding: const EdgeInsets.all(8),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: kolom,
+                          childAspectRatio: constraints.maxWidth < 500 ? 3.0 : 2.5,
+                          crossAxisSpacing: 8,
+                          mainAxisSpacing: 8,
+                        ),
+                        itemCount: hasilCari.length,
+                        itemBuilder: (context, index) {
+                          final barang = hasilCari[index];
+                          return BarangCard(
+                            nama: barang['nama'],
+                            kategori: barang['kategori'] ?? 'Lainnya',
+                            hargaAnggota: barang['anggota'],
+                            hargaUmum: barang['umum'],
+                            stok: barang['stok'],
+                            ikon: barang['ikon'],
+                            sorot: barang['stok'] < 20,
+                          );
+                        },
                       );
                     },
                   ),
